@@ -1,4 +1,5 @@
 from config import *
+import math
 
 def getData(path):
     '''Возвращает данные переходов из файла'''
@@ -61,3 +62,60 @@ def prepareData(files):
         lensArr.append(lens)
         commonModel = addModel(commonModel, lens)
     return lensArr, dataArr, commonModel
+
+    
+
+class GraphData:
+    @staticmethod
+    def getDots(dataArr, key):
+        dots = []
+        x = 1
+        for d in dataArr:
+            if key in d:
+                timeSeries = d[key]
+                for y in timeSeries:
+                    dots.append([x, y, '#673ab7'])
+                x += 1
+        return dots
+    @staticmethod
+    def getMiddleLines(dataArr, key):
+        middleDots = []
+        movingAverages = []
+        sigmaArr = []
+        x = 1
+        lastMean = 0
+        lines = []
+        for d in dataArr:
+            if key in d:
+                timeSeries = d[key]
+                if len(timeSeries) == 0:
+                    currMean = 0
+                else:
+                    currMean = int(sum(timeSeries) / len(timeSeries))
+
+                if lastMean != 0:
+                    lines.append([ [x - 1, x], [lastMean, currMean], 'o', '#588dff' ]) # testing
+
+                    # indicator MA
+                    middleDots.append(currMean)
+                    movingAverage = sum(middleDots) / len(middleDots)
+                    movingAverages.append(movingAverage)
+                    # lines.append([ [x - 1, x], [movingAverages[len(movingAverages) - 2], movingAverage], 'o', 'black' ])
+
+                    # standart deviation
+                    s = 0
+                    for m in middleDots:
+                        s += (m - movingAverage) ** 2
+                    s /= len(middleDots)
+                    sigma = math.sqrt(s)
+                    sigmaArr.append(sigma)
+                    prevSigma = sigmaArr[len(sigmaArr) - 2]
+                    lines.append([ [x - 1, x], [movingAverage + prevSigma, movingAverage + sigma], ',', 'grey' ])
+                    # lines.append([ [x - 1, x], [movingAverage - prevSigma, movingAverage - sigma], ',', 'grey' ])
+
+                lastMean = currMean
+                x += 1
+        return middleDots, movingAverages, sigmaArr, lines
+    @staticmethod
+    def getCommonMiddleLine(middleDots):
+        return int(sum(middleDots) / len(middleDots))
