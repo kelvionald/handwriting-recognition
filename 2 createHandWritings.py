@@ -25,21 +25,20 @@ def createModel(commonModel, dataArr):
             if key in d:
                 timeSeriesArr.append(d[key])
                 [elements.append(x) for x in d[key]]
-        if len(timeSeriesArr) > 2:
-            middle = sum(elements) / len(elements)
-            leng = len(elements)
-            for i in range(0, leng):
-                el = elements[i]
-                if middle + border >= el and el >= middle - border:
-                    elements[i] = 1
-                else:
-                    elements[i] = 0
-            percent = sum(elements) / leng
-            if percent > limit:
-                arr = key.split(' ')
-                arr = list(map(int, arr))
-                # print(key, getChar(arr[0]) + ' ' + getChar(arr[1]), percent)
-                model.append([key, middle])
+        middle = sum(elements) / len(elements)
+        leng = len(elements)
+        for i in range(0, leng):
+            el = elements[i]
+            if middle + border >= el and el >= middle - border:
+                elements[i] = 1
+            else:
+                elements[i] = 0
+        percent = sum(elements) / leng
+        if percent > limit:
+            arr = key.split(' ')
+            arr = list(map(int, arr))
+            # print(key, getChar(arr[0]) + ' ' + getChar(arr[1]), percent)
+            model.append([key, middle])
     return model
 
 '''
