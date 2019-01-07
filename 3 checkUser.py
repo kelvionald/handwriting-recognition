@@ -99,7 +99,7 @@ for i, v in minStat.items():
         if int(i) == int(hw[0][1]):
             lenHW = len(hw)
             break
-    if not lenHW in [8, 3, 4]:
+    if not lenHW in [8, 3, 4] or True:#
         # continue
         commonSuccess += sumEq
         commonExpectSuccess += lenEq
