@@ -36,44 +36,26 @@ def sortModel(lens):
                 lens[i], lens[j] = lens[j], lens[i]
     return lens
 
-# Пакетная обработка с предобработкой
-preparedPath = 'prepared/'
-graphsPath = 'graphs/'
-dirs = os.listdir(preparedPath)
-for user in dirs:
-    if user != '5643':
-        continue
-    xpath = preparedPath + user + '/'
-    files = os.listdir(xpath)
-    dir = graphsPath + user + '/'
-    if not os.path.exists(dir):
-        os.makedirs(dir)
-    files = list(map(lambda x: xpath + x, files))
-    lensArr, dataArr, commonModel = prepareData(files)
-    graphNum = 1
-    model = sortModel(lensArr[0])
-    i = 10
-    for el in model:
-        key = el['key']
-        # if '66 32' != key: continue # testing
-        i -= 1
-        if i == 0: break # testing
-        # Сборка точек
-        x = 1
+class GraphData:
+    @staticmethod
+    def getDots(dataArr, key):
         dots = []
-        lines = []
+        x = 1
         for d in dataArr:
             if key in d:
                 timeSeries = d[key]
                 for y in timeSeries:
                     dots.append([x, y, '#673ab7'])
                 x += 1
-        # Сборка средних линий
+        return dots
+    @staticmethod
+    def getMiddleLines(dataArr, key):
         middleDots = []
         movingAverages = []
         sigmaArr = []
         x = 1
         lastMean = 0
+        lines = []
         for d in dataArr:
             if key in d:
                 timeSeries = d[key]
@@ -104,27 +86,46 @@ for user in dirs:
 
                 lastMean = currMean
                 x += 1
+        return middleDots, movingAverages, sigmaArr, lines
+    @staticmethod
+    def getCommonMiddleLine(middleDots):
+        return int(sum(middleDots) / len(middleDots))
 
-        # if len(sigmaArr) != 0:
-        #     commonSigma = sum(sigmaArr) / len(sigmaArr)
-        #     commonSigma *= 3
-        #     lines.append([[1, x-1], [commonSigma, commonSigma], 'o', '#00e600'])
-        
+# Пакетная обработка с предобработкой
+preparedPath = 'prepared/'
+graphsPath = 'graphs/'
+dirs = os.listdir(preparedPath)
+for user in dirs:
+    if user != '5643':
+        continue
+    xpath = preparedPath + user + '/'
+    files = os.listdir(xpath)
+    dir = graphsPath + user + '/'
+    if not os.path.exists(dir):
+        os.makedirs(dir)
+    files = list(map(lambda x: xpath + x, files))
+    lensArr, dataArr, commonModel = prepareData(files)
+    graphNum = 1
+    model = sortModel(lensArr[0])
+    i = 10
+    for el in model:
+        key = el['key']
+        if '66 32' != key: continue # testing
+        i -= 1
+        if i == 0: break # testing
+
+        lines = []
+        dots = []
+        # Сборка точек
+        tmp = GraphData.getDots(dataArr, key)
+        [dots.append(x) for x in tmp]
+        # Сборка средних линий
+        middleDots, movingAverages, sigmaArr, tmp = GraphData.getMiddleLines(dataArr, key)
+        [lines.append(x) for x in tmp]
         # Общая средняя линия
-        commonMiddle = []
-        x = 1
-        for d in dataArr:
-            if key in d:
-                timeSeries = d[key]
-                if len(timeSeries) == 0:
-                    currMean = 0
-                else:
-                    currMean = int(sum(timeSeries) / len(timeSeries))
-                commonMiddle.append(currMean)
-                x += 1
-        if len(commonMiddle) != 0:
-            commonMiddle = int(sum(commonMiddle) / len(commonMiddle))
-            lines.append([[1, x-1], [commonMiddle, commonMiddle], 'o', '#fefe22'])
+        if len(middleDots) != 0:
+            commonMiddle = GraphData.getCommonMiddleLine(middleDots)
+            lines.append([[1, len(middleDots)], [commonMiddle, commonMiddle], 'o', '#fefe22'])
 
         showGraph2(user, key, graphNum, dots, lines, dir)
         graphNum += 1
