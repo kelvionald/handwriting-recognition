@@ -1,0 +1,1 @@
+python "3 checkUser.py" > log.txt
