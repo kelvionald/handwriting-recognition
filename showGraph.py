@@ -1,57 +1,8 @@
 import matplotlib.pyplot as plt
 import os
+import math
 
 from common import *
-
-def showGraph(user, graphNum, dataArr, key, newDir = '', isShow = False):
-    '''Выводи график времен перехода по попыткам'''
-    print(user, ' key: ', key)
-    keyArr = key.split(' ')
-    transition = getChar(int(keyArr[0])) + ' - ' + getChar(int(keyArr[1]))
-    plt.title('Переход: ' + transition)
-    lastMean = 0
-    x = 1
-    
-    middleValue = 0
-    values = []
-    count = 0
-    plt.scatter(x, 1000, color= 'white')
-    plt.scatter(x, 0, color= 'white')
-    for d in dataArr:
-        if key in d:
-            timeSeries = d[key]
-            if len(timeSeries) == 0:
-                currMean = 0
-            else:
-                currMean = int(sum(timeSeries) / len(timeSeries))
-            if lastMean != 0:
-                plt.plot([x - 1, x], [lastMean, currMean], marker = 'o', color= '#588dff')
-            lastMean = currMean
-            
-            for y in timeSeries:
-                plt.scatter(x, y, color= '#673ab7')
-                values.append(y)
-
-            middleValue += currMean
-            count += 1
-        x += 1
-    
-    if count != 0:
-        middleValue /= count
-        plt.plot([1, x-1], [middleValue, middleValue], marker = 'o', color= 'y')
-    
-    commonPath = newDir + user + ' ' + str(graphNum) + ' ' + key
-    if isShow:
-        plt.show()
-    try:
-        plt.savefig(commonPath + ' ' + transition + '.png')
-    except OSError:
-        print('Err filename: ' + commonPath + ' ' + transition)
-        plt.savefig(commonPath + '.png')
-    except ValueError:
-        print('Err filename: ' + commonPath + ' ' + transition)
-        plt.savefig(commonPath + '.png')
-    plt.clf()
 
 def showGraph2(user, key, graphNum, dots, lines, path):
     '''Выводи график времен перехода по попыткам'''
@@ -63,9 +14,9 @@ def showGraph2(user, key, graphNum, dots, lines, path):
     plt.scatter(1, 0, color= 'white')
     
     for dot in dots:
-        plt.scatter(dot[0], dot[1], color = dot[2])
+        plt.scatter(dot[0], dot[1], color = dot[2], s = 6)
     for line in lines:
-        plt.plot(line[0], line[1], marker = line[2], color = line[3])
+        plt.plot(line[0], line[1], marker = ',', color = line[3])
         
     commonPath = path + user + ' ' + str(graphNum) + ' ' + key
     try:
@@ -101,9 +52,12 @@ for user in dirs:
     lensArr, dataArr, commonModel = prepareData(files)
     graphNum = 1
     model = sortModel(lensArr[0])
+    i = 10
     for el in model:
         key = el['key']
-        if '66 32' != key: continue # testing
+        # if '66 32' != key: continue # testing
+        i -= 1
+        if i == 0: break # testing
         # Сборка точек
         x = 1
         dots = []
@@ -115,6 +69,9 @@ for user in dirs:
                     dots.append([x, y, '#673ab7'])
                 x += 1
         # Сборка средних линий
+        middleDots = []
+        movingAverages = []
+        sigmaArr = []
         x = 1
         lastMean = 0
         for d in dataArr:
@@ -124,10 +81,35 @@ for user in dirs:
                     currMean = 0
                 else:
                     currMean = int(sum(timeSeries) / len(timeSeries))
+
                 if lastMean != 0:
-                    lines.append([ [x - 1, x], [lastMean, currMean], 'o', '#588dff' ])
+                    lines.append([ [x - 1, x], [lastMean, currMean], 'o', '#588dff' ]) # testing
+
+                    # indicator MA
+                    middleDots.append(currMean)
+                    movingAverage = sum(middleDots) / len(middleDots)
+                    movingAverages.append(movingAverage)
+                    # lines.append([ [x - 1, x], [movingAverages[len(movingAverages) - 2], movingAverage], 'o', 'black' ])
+
+                    # standart deviation
+                    s = 0
+                    for m in middleDots:
+                        s += (m - movingAverage) ** 2
+                    s /= len(middleDots)
+                    sigma = math.sqrt(s)
+                    sigmaArr.append(sigma)
+                    prevSigma = sigmaArr[len(sigmaArr) - 2]
+                    lines.append([ [x - 1, x], [movingAverage + prevSigma, movingAverage + sigma], ',', 'grey' ])
+                    # lines.append([ [x - 1, x], [movingAverage - prevSigma, movingAverage - sigma], ',', 'grey' ])
+
                 lastMean = currMean
                 x += 1
+
+        # if len(sigmaArr) != 0:
+        #     commonSigma = sum(sigmaArr) / len(sigmaArr)
+        #     commonSigma *= 3
+        #     lines.append([[1, x-1], [commonSigma, commonSigma], 'o', '#00e600'])
+        
         # Общая средняя линия
         commonMiddle = []
         x = 1
@@ -142,7 +124,7 @@ for user in dirs:
                 x += 1
         if len(commonMiddle) != 0:
             commonMiddle = int(sum(commonMiddle) / len(commonMiddle))
-            lines.append([[1, x-1], [commonMiddle, commonMiddle], 'o', 'y'])
+            lines.append([[1, x-1], [commonMiddle, commonMiddle], 'o', '#fefe22'])
 
         showGraph2(user, key, graphNum, dots, lines, dir)
         graphNum += 1
