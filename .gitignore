@@ -1,0 +1,6 @@
+data/*
+graphs/*
+prepared/*
+users/*
+__pycache__/*
+log.txt
