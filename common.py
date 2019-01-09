@@ -1,6 +1,9 @@
 from config import *
 import math
 
+def middleCalc(arr):
+    return sum(arr) / len(arr)
+
 def getData(path):
     '''Возвращает данные переходов из файла'''
     f = open(path)
@@ -96,22 +99,24 @@ class GraphData:
                 if lastMean != 0:
                     lines.append([ [x - 1, x], [lastMean, currMean], 'o', '#588dff' ]) # testing
 
-                    # indicator MA
-                    middleDots.append(currMean)
-                    movingAverage = sum(middleDots) / len(middleDots)
-                    movingAverages.append(movingAverage)
-                    # lines.append([ [x - 1, x], [movingAverages[len(movingAverages) - 2], movingAverage], 'o', 'black' ])
+                # indicator MA
+                middleDots.append(currMean)
+                movingAverage = sum(middleDots) / len(middleDots)
+                movingAverages.append(movingAverage)
+                # lines.append([ [x - 1, x], [movingAverages[len(movingAverages) - 2], movingAverage], 'o', 'black' ])
 
-                    # standart deviation
-                    s = 0
-                    for m in middleDots:
-                        s += (m - movingAverage) ** 2
-                    s /= len(middleDots)
-                    sigma = math.sqrt(s)
-                    sigmaArr.append(sigma)
-                    prevSigma = sigmaArr[len(sigmaArr) - 2]
-                    lines.append([ [x - 1, x], [movingAverage + prevSigma, movingAverage + sigma], ',', 'grey' ])
-                    # lines.append([ [x - 1, x], [movingAverage - prevSigma, movingAverage - sigma], ',', 'grey' ])
+                # standart deviation
+                s = 0
+                movingMiddleDots = middleDots[-StdPeriod:]
+                for m in movingMiddleDots:
+                    s += (m - movingAverage) ** 2
+                s /= len(movingMiddleDots)
+                sigma = math.sqrt(s)
+                curSigma = movingAverage + sigma * StdMultiplier
+                sigmaArr.append(curSigma)
+                prevSigma = sigmaArr[len(sigmaArr) - 2]
+                lines.append([ [x - 1, x], [prevSigma, curSigma], ',', 'grey' ])
+                # lines.append([ [x - 1, x], [movingAverage - prevSigma, movingAverage - sigma], ',', 'grey' ])
 
                 lastMean = currMean
                 x += 1
