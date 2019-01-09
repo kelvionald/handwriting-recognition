@@ -41,8 +41,7 @@ preparedPath = 'prepared/'
 graphsPath = 'graphs/'
 dirs = os.listdir(preparedPath)
 for user in dirs:
-    if user != '5643':
-        continue
+    if user != '5643': continue # testing
     xpath = preparedPath + user + '/'
     files = os.listdir(xpath)
     dir = graphsPath + user + '/'
@@ -67,6 +66,12 @@ for user in dirs:
         # Сборка средних линий
         middleDots, movingAverages, sigmaArr, tmp = GraphData.getMiddleLines(dataArr, key)
         [lines.append(x) for x in tmp]
+        # Перекраска точек выше стандартного отклонения
+        for j in range(0, len(dots)):
+            attemptNum = dots[j][0]
+            value = dots[j][1]
+            if value > sigmaArr[attemptNum - 1]:
+                dots[j][2] = 'red'
         # Общая средняя линия
         if len(middleDots) != 0:
             commonMiddle = GraphData.getCommonMiddleLine(middleDots)
