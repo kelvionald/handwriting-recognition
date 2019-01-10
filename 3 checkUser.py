@@ -28,7 +28,6 @@ for d in dirs:
         for hw in handwritigArr:
             checklist = []
             name = hw['key']
-
             def func1(x):
                 key = x[0]
                 middle = x[1]
@@ -36,7 +35,6 @@ for d in dirs:
                     value = sum(data[key]) / len(data[key])
                     return (1 if cmp(value, middle) else 0)
                 return -1
-
             checklist = list(map(func1, hw['modelMiddle']))
             checklist = list(filter(lambda x: x >= 0, checklist))
             if len(checklist) == 0:
@@ -49,7 +47,6 @@ for d in dirs:
             statistic[name].append([h, round(rating, 2)])
 
 minStat = {}
-size = 0
 for keys, values in statistic.items():
     print(keys)
     for x in values:
@@ -58,17 +55,26 @@ for keys, values in statistic.items():
         err = ''
         if keys == x[0]:
             if x[1] >= accessLimit:
-                minStat[keys]['equals'].append(1)
+                val = 1
             else:
-                minStat[keys]['equals'].append(0)
+                val = 0
                 err = '<--- equals'
+            minStat[keys]['equals'].append(val)
         else:
+            # if StdEnable:
+            #     if True:
+            #         continue # !
+            #     else:
+            #         # 1
+            # else:
+            # 1
             if x[1] >= accessLimit:
-                minStat[keys]['notequals'].append(1)
+                val = 1
                 err = '<--- not equals'
             else:
-                minStat[keys]['notequals'].append(0)
-        print(x, err)
+                val = 0
+            minStat[keys]['notequals'].append(val)
+        # print(x, err)
 print()
 for keys, values in statistic.items():
     print('Количество сравнений по одельному подчерку: ', len(values))
@@ -93,13 +99,17 @@ for i, v in minStat.items():
     commonExpectSuccess += lenEq
     commonError += sumNEq
     commonExpectError += lenNEq
+    for hw in handwritigArr:
+        if i == hw['key']:
+            lenHW = len(hw['modelMiddle'])
+            break
     minStat[i] = {
         'i': i,
         'equals': equals,
         'notequals': notequals,
         'eqPercent': round(equalsPercent, 2),
         'neqPercent': round(notequalsPercent, 2),
-        'lenHW': len(hw['modelMiddle'])
+        'lenHW': lenHW
     }
 print()
 table = PrettyTable()

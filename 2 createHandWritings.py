@@ -48,7 +48,7 @@ def createModel(commonModel, dataArr):
             arr = key.split(' ')
             arr = list(map(int, arr))
             modelMiddles.append([key, middle])
-        else:
+        elif StdEnable:
             arr = key.split(' ')
             arr = list(map(int, arr))
             # if key == '66 32':
