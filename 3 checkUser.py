@@ -1,19 +1,13 @@
 import os
 from prettytable import PrettyTable
-
 from common import *
+import json
 
 def readHandwriting(path):
     '''Возвращае подчерк из файла'''
     f = open(path)
-    f.readline()
-    hw = []
-    hw.append(['isName', path[6:].split('.')[0]])
-    for line in f:
-        arr = line.split(',')
-        arr = [x.replace('"', '') for x in arr]
-        arr[1] = arr[1].replace('\n', '')
-        hw.append([arr[0], arr[1]])
+    data = f.readline()
+    hw = json.loads(data)
     f.close()
     return hw
 
@@ -33,18 +27,18 @@ for d in dirs:
         data = getData(preparedPath + d + '/' + f)
         for hw in handwritigArr:
             checklist = []
-            for m in hw:
-                if m[0] == 'isName':
-                    name = m[1]
-                    continue
-                key = m[0]
-                middle = float(m[1])
+            name = hw['key']
+
+            def func1(x):
+                key = x[0]
+                middle = x[1]
                 if key in data:
                     value = sum(data[key]) / len(data[key])
-                    if middle + border > value and value > middle - border:
-                        checklist.append(1)
-                    else:
-                        checklist.append(0)
+                    return (1 if cmp(value, middle) else 0)
+                return -1
+
+            checklist = list(map(func1, hw['modelMiddle']))
+            checklist = list(filter(lambda x: x >= 0, checklist))
             if len(checklist) == 0:
                 rating = 0
             else:
@@ -95,23 +89,12 @@ for i, v in minStat.items():
     lenNEq = len(v['notequals'])
     notequals = str(sumNEq) + '/' + str(lenNEq)
     notequalsPercent = sumNEq / lenNEq
-    for hw in handwritigArr:
-        if int(i) == int(hw[0][1]):
-            lenHW = len(hw)
-            break
-    if not lenHW in [8, 3, 4] or True:#
-        # continue
-        commonSuccess += sumEq
-        commonExpectSuccess += lenEq
-        commonError += sumNEq
-        commonExpectError += lenNEq
     minStat[i] = {
         'i': i,
         'equals': equals,
         'notequals': notequals,
         'eqPercent': round(equalsPercent, 2),
-        'neqPercent': round(notequalsPercent, 2),
-        'lenHW': lenHW
+        'neqPercent': round(notequalsPercent, 2)
     }
 print()
 table = PrettyTable()

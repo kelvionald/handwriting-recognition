@@ -41,9 +41,7 @@ def createModel(commonModel, dataArr):
                 # print(d[key])
 
         middle = middleCalc(elements)
-        def cmp(el):
-            return middle + border >= el and el >= middle - border
-        elementsPrep = list(map(lambda x: 1 if cmp(x) else 0, elements))
+        elementsPrep = list(map(lambda x: 1 if cmp(x, middle) else 0, elements))
 
         percent = middleCalc(elementsPrep)
         if percent > limit:
@@ -61,7 +59,7 @@ def createModel(commonModel, dataArr):
                     if ts < currSigma[i]:
                         newDots.append(ts)
             middle = middleCalc(newDots)
-            elementsPrep = list(map(lambda x: 1 if cmp(x) else 0, newDots))
+            elementsPrep = list(map(lambda x: 1 if cmp(x, middle) else 0, newDots))
             percent = middleCalc(elementsPrep)
             # print(percent, StdLimit)
             if percent > StdLimit:
@@ -110,8 +108,9 @@ def saveUser(path, user):
 
 import json
 
-def saveUser2(path, modelMiddle, modelStd):
+def saveUser2(path, modelMiddle, modelStd, key):
     data = {
+        'key': key,
         'modelMiddle': modelMiddle,
         'modelStd': modelStd
     }
@@ -131,5 +130,5 @@ for d in dirs:
     lensArr, dataArr, commonModel = prepareData(files)
     model, modelStd = createModel(commonModel, dataArr)
     path = userPath + userId + '.csv'
-    saveUser2(path, model, modelStd)
+    saveUser2(path, model, modelStd, d)
     print('complete: ', d)

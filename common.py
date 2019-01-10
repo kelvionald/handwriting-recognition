@@ -124,3 +124,6 @@ class GraphData:
     @staticmethod
     def getCommonMiddleLine(middleDots):
         return int(sum(middleDots) / len(middleDots))
+        
+def cmp(el, middle):
+    return middle + border >= el and el >= middle - border
