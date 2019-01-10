@@ -74,7 +74,8 @@ for keys, values in statistic.items():
             else:
                 val = 0
             minStat[keys]['notequals'].append(val)
-        print(x, err)
+        if len(err) != 0:
+            print(x, err)
 print()
 for keys, values in statistic.items():
     print('Количество сравнений по одельному подчерку: ', len(values))

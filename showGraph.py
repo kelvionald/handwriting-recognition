@@ -41,7 +41,7 @@ preparedPath = 'prepared/'
 graphsPath = 'graphs/'
 dirs = os.listdir(preparedPath)
 for user in dirs:
-    if user != '5643': continue # testing
+    # if user != '5643': continue # testing
     xpath = preparedPath + user + '/'
     files = os.listdir(xpath)
     dir = graphsPath + user + '/'
@@ -54,9 +54,9 @@ for user in dirs:
     i = 10
     for el in model:
         key = el['key']
-        if '66 32' != key: continue # testing
+        # if '66 32' != key: continue # testing
         i -= 1
-        if i == 0: break # testing
+        # if i == 0: break # testing
 
         lines = []
         dots = []
