@@ -74,7 +74,7 @@ for keys, values in statistic.items():
             else:
                 val = 0
             minStat[keys]['notequals'].append(val)
-        # print(x, err)
+        print(x, err)
 print()
 for keys, values in statistic.items():
     print('Количество сравнений по одельному подчерку: ', len(values))
@@ -104,16 +104,16 @@ for i, v in minStat.items():
             lenHW = len(hw['modelMiddle'])
             break
     minStat[i] = {
-        'i': i,
-        'equals': equals,
-        'notequals': notequals,
-        'eqPercent': round(equalsPercent, 2),
-        'neqPercent': round(notequalsPercent, 2),
-        'lenHW': lenHW
+        'Номер подчерка': i,
+        'Удачные': equals,
+        'Ошибки': notequals,
+        'Удач.%': round(equalsPercent, 2),
+        'Ошибки%': round(notequalsPercent, 2),
+        'Кол-во признаков': lenHW
     }
 print()
 table = PrettyTable()
-table.field_names = ["Номер подчерка", "Удачные", "Ошибки", "Удач.%", "Ошибки%", "Кол-во признаков"]
+table.field_names = minStat[i].keys()
 for i, v in minStat.items():
     table.add_row(v.values())
 print(table)
