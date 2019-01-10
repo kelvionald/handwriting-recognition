@@ -56,7 +56,7 @@ for user in dirs:
         key = el['key']
         # if '66 32' != key: continue # testing
         i -= 1
-        # if i == 0: break # testing
+        if i == 0: break # testing
 
         lines = []
         dots = []
