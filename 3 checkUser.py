@@ -89,12 +89,17 @@ for i, v in minStat.items():
     lenNEq = len(v['notequals'])
     notequals = str(sumNEq) + '/' + str(lenNEq)
     notequalsPercent = sumNEq / lenNEq
+    commonSuccess += sumEq
+    commonExpectSuccess += lenEq
+    commonError += sumNEq
+    commonExpectError += lenNEq
     minStat[i] = {
         'i': i,
         'equals': equals,
         'notequals': notequals,
         'eqPercent': round(equalsPercent, 2),
-        'neqPercent': round(notequalsPercent, 2)
+        'neqPercent': round(notequalsPercent, 2),
+        'lenHW': len(hw['modelMiddle'])
     }
 print()
 table = PrettyTable()
@@ -109,5 +114,8 @@ print()
 print({
     'border': border,
     'limit': limit,
-    'accessLimit': accessLimit
+    'accessLimit': accessLimit,
+    'StdMultiplier': StdMultiplier,
+    'StdPeriod': StdPeriod,
+    'StdLimit': StdLimit
 })
