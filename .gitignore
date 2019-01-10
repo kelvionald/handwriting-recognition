@@ -4,3 +4,4 @@ prepared/*
 users/*
 __pycache__/*
 log.txt
+_graphs/*
