@@ -56,7 +56,7 @@ def createModel(commonModel, dataArr):
         newDots = []
         for i in range(0, len(timeSeries)):
             for ts in timeSeries[i]:
-                print(ts, currSigma[i])
+                # print(ts, currSigma[i])
                 if ts <= currSigma[i]:
                     newDots.append(ts)
         middle = middleCalc(newDots)

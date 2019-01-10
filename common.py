@@ -124,6 +124,26 @@ class GraphData:
     @staticmethod
     def getCommonMiddleLine(middleDots):
         return int(sum(middleDots) / len(middleDots))
-        
+
 def cmp(el, middle):
     return middle + border >= el and el >= middle - border
+
+def getSigmaArr(source):
+    sigmaArr = []
+    for i in range(0, len(source)):
+        if i < StdPeriod:
+            window = source[0:i + 1]
+        else:
+            window = source[i-2:i+1]
+        middle = middleCalc(window)
+        summa = sum(map(lambda x: (x - middle) ** 2, window))
+        middleSqr = summa / len(window)
+        sigma = math.sqrt(middleSqr)
+        sigmaArr.append(sigma)
+        # print(window, middle, sigma)
+    return sigmaArr
+
+# import matplotlib.pyplot as plt
+# b = [1, 1, 1, 6, 2, 1, 8, 2, 2, 2, 2, 3]
+# c = list(range(0, len(b)))
+# a = getSigmaArr(b)
