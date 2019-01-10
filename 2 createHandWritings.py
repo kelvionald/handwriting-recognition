@@ -40,30 +40,31 @@ def createModel(commonModel, dataArr):
                 timeSeries.append(d[key])
                 # print(d[key])
 
-        middle = middleCalc(elements)
-        elementsPrep = list(map(lambda x: 1 if cmp(x, middle) else 0, elements))
+        # middle = middleCalc(elements)
+        # elementsPrep = list(map(lambda x: 1 if cmp(x, middle) else 0, elements))
 
+        # percent = middleCalc(elementsPrep)
+        # if percent > limit:
+        #     arr = key.split(' ')
+        #     arr = list(map(int, arr))
+        #     modelMiddles.append([key, middle])
+        # elif StdEnable:
+        arr = key.split(' ')
+        arr = list(map(int, arr))
+        # if key == '66 32':
+        currSigma = sigmaArrArr[key]
+        newDots = []
+        for i in range(0, len(timeSeries)):
+            for ts in timeSeries[i]:
+                print(ts, currSigma[i])
+                if ts <= currSigma[i]:
+                    newDots.append(ts)
+        middle = middleCalc(newDots)
+        elementsPrep = list(map(lambda x: 1 if cmp(x, middle) else 0, newDots))
         percent = middleCalc(elementsPrep)
-        if percent > limit:
-            arr = key.split(' ')
-            arr = list(map(int, arr))
-            modelMiddles.append([key, middle])
-        elif StdEnable:
-            arr = key.split(' ')
-            arr = list(map(int, arr))
-            # if key == '66 32':
-            currSigma = sigmaArrArr[key]
-            newDots = []
-            for i in range(0, len(timeSeries)):
-                for ts in timeSeries[i]:
-                    if ts < currSigma[i]:
-                        newDots.append(ts)
-            middle = middleCalc(newDots)
-            elementsPrep = list(map(lambda x: 1 if cmp(x, middle) else 0, newDots))
-            percent = middleCalc(elementsPrep)
-            # print(percent, StdLimit)
-            if percent > StdLimit:
-                modelStd.append([key, middle])
+        # print(percent, StdLimit)
+        if percent > StdLimit:
+            modelStd.append([key, middle])
     return modelMiddles, modelStd
 
 '''
