@@ -50,13 +50,18 @@ def createModel(commonModel, dataArr):
         # if key == '66 32':
         # currSigma = sigmaArrArr[key]
         newDots = []
-        for i in range(0, len(timeSeries)):
-            sigmaArr = getSigmaArr(timeSeries[i])
-            for j in range(0, len(sigmaArr)):
-                ts = timeSeries[i][j]
-                middle = middleCalc(timeSeries[i])
-                if ts <= sigmaArr[j] * StdMultiplier + middle and ts >= middle - sigmaArr[j] * StdMultiplier:
-                    newDots.append(ts)
+        # for i in range(0, len(timeSeries)):
+        #     sigmaArr = getSigmaArr(timeSeries[i])
+        #     for j in range(0, len(sigmaArr)):
+        #         ts = timeSeries[i][j]
+        #         middle = middleCalc(timeSeries[i])
+        #         if ts <= sigmaArr[j] * StdMultiplier + middle and ts >= middle - sigmaArr[j] * StdMultiplier:
+        #             newDots.append(ts)
+        sigmaArr = getSigmaArr(elements)
+        middle = middleCalc(elements)
+        for i in range(0, len(elements)):
+            if elements[i] <= sigmaArr[i] * StdMultiplier + middle and elements[i] >= middle - sigmaArr[i] * StdMultiplier:
+                newDots.append(elements[i])
         middle = middleCalc(newDots)
         elementsPrep = list(map(lambda x: 1 if cmp(x, middle) else 0, newDots))
         percent = middleCalc(elementsPrep)
