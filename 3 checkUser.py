@@ -50,27 +50,6 @@ for d in dirs:
             if not name in statistic:
                 statistic[name] = []
             statistic[name].append([h, round(rating, 2)])
-            # exit()
-            # continue
-            # checklist = []
-            # name = hw['key']
-            # def func1(x):
-            #     key = x[0]
-            #     middle = x[1]
-            #     if key in data:
-            #         value = sum(data[key]) / len(data[key])
-            #         return (1 if cmp(value, middle) else 0)
-            #     return -1
-            # checklist = list(map(func1, hw['modelMiddle']))
-            # checklist = list(filter(lambda x: x >= 0, checklist))
-            # if len(checklist) == 0:
-            #     rating = 0
-            # else:
-            #     rating = sum(checklist) / len(checklist)
-            # h = f.split('_')[0]
-            # if not name in statistic:
-            #     statistic[name] = []
-            # statistic[name].append([h, round(rating, 2)])
 
 minStat = {}
 for keys, values in statistic.items():
@@ -87,13 +66,6 @@ for keys, values in statistic.items():
                 err = '<--- equals'
             minStat[keys]['equals'].append(val)
         else:
-            # if StdEnable:
-            #     if True:
-            #         continue # !
-            #     else:
-            #         # 1
-            # else:
-            # 1
             if x[1] >= accessLimit:
                 val = 1
                 err = '<--- not equals'
