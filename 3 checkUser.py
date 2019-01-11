@@ -87,13 +87,6 @@ for keys, values in statistic.items():
                 err = '<--- equals'
             minStat[keys]['equals'].append(val)
         else:
-            # if StdEnable:
-            #     if True:
-            #         continue # !
-            #     else:
-            #         # 1
-            # else:
-            # 1
             if x[1] >= accessLimit:
                 val = 1
                 err = '<--- not equals'

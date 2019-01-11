@@ -82,35 +82,3 @@ for user in dirs:
 
         showGraph2(user, key, graphNum, dots, lines, dir)
         graphNum += 1
-
-# Одиночная обработка
-# user = '8'
-# xpath = 'prepared/' + user + '/'
-# files = os.listdir(xpath)
-# # Создает графики попыток по всем переходам
-# files = list(map(lambda x: xpath + x, files))
-# lensArr, dataArr, commonModel = prepareData(files)
-# graphNum = 1
-# model = sortModel(lensArr[0])
-# for el in model:
-#     showGraph(user, graphNum, dataArr, el['key'])
-#     graphNum += 1
-
-# # Пакетная обработка
-# preparedPath = 'prepared/'
-# graphsPath = 'graphs/'
-# dirs = os.listdir(preparedPath)
-# for user in dirs:
-#     xpath = preparedPath + user + '/'
-#     files = os.listdir(xpath)
-#     dir = graphsPath + user + '/'
-#     if not os.path.exists(dir):
-#         os.makedirs(dir)
-#     files = list(map(lambda x: xpath + x, files))
-#     lensArr, dataArr, commonModel = prepareData(files)
-#     graphNum = 1
-#     model = sortModel(lensArr[0])
-#     for el in model:
-#         # if '74 0' == el['key']:
-#         showGraph(user, graphNum, dataArr, el['key'], dir)
-#         graphNum += 1
