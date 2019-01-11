@@ -19,48 +19,50 @@ def createModel(commonModel, dataArr):
     modelMiddles = []
     modelStd = []
 
-    middleDotsArr = {}
-    movingAveragesArr = {}
-    sigmaArrArr = {}
+    # middleDotsArr = {}
+    # movingAveragesArr = {}
+    # sigmaArrArr = {}
+    # for el in commonModel:
+    #     for d in dataArr:
+    #         key = el['key']
+    #         if (isContainsSpaces(key)):
+    #             print('continue ', key)
+    #             continue
+    #         if key in d:
+    #             middleDots, movingAverages, sigmaArr, lines = GraphData.getMiddleLines(dataArr, key)
+    #             middleDotsArr[key] = middleDots
+    #             movingAveragesArr[key] = movingAverages
+    #             sigmaArrArr[key] = sigmaArr
     for el in commonModel:
-        for d in dataArr:
-            key = el['key']
-            if (isContainsSpaces(key)):
-                print('continue ', key)
-                continue
-            if key in d:
-                middleDots, movingAverages, sigmaArr, lines = GraphData.getMiddleLines(dataArr, key)
-                middleDotsArr[key] = middleDots
-                movingAveragesArr[key] = movingAverages
-                sigmaArrArr[key] = sigmaArr
-    for el in commonModel:
+        key = el['key']
+        if (isContainsSpaces(key)):
+            print('continue ', key)
+            continue
         timeSeries = []
         elements = []
         for d in dataArr:
-            key = el['key']
-            if (isContainsSpaces(key)):
-                print('continue ', key)
-                continue
             if key in d:
                 [elements.append(x) for x in d[key]]
                 timeSeries.append(d[key])
-        if key in sigmaArrArr:
-            arr = key.split(' ')
-            arr = list(map(int, arr))
-            # if key == '66 32':
-            currSigma = sigmaArrArr[key]
-            newDots = []
-            for i in range(0, len(timeSeries)):
-                for ts in timeSeries[i]:
-                    # print(ts, currSigma[i])
-                    if ts <= currSigma[i]:
-                        newDots.append(ts)
-            middle = middleCalc(newDots)
-            elementsPrep = list(map(lambda x: 1 if cmp(x, middle) else 0, newDots))
-            percent = middleCalc(elementsPrep)
-            # print(percent, StdLimit)
-            if percent > StdLimit:
-                modelStd.append([key, middle])
+                
+        arr = key.split(' ')
+        arr = list(map(int, arr))
+        # if key == '66 32':
+        # currSigma = sigmaArrArr[key]
+        newDots = []
+        for i in range(0, len(timeSeries)):
+            sigmaArr = getSigmaArr(timeSeries[i])
+            for j in range(0, len(sigmaArr)):
+                ts = timeSeries[i][j]
+                middle = middleCalc(timeSeries[i])
+                if ts <= sigmaArr[j] * StdMultiplier + middle and ts >= middle - sigmaArr[j] * StdMultiplier:
+                    newDots.append(ts)
+        middle = middleCalc(newDots)
+        elementsPrep = list(map(lambda x: 1 if cmp(x, middle) else 0, newDots))
+        percent = middleCalc(elementsPrep)
+        # print(percent, StdLimit)
+        if percent > StdLimit:
+            modelStd.append([key, middle])
     return modelMiddles, modelStd
 
 def saveUser(path, user):
