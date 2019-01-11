@@ -147,3 +147,8 @@ def getSigmaArr(source):
 # b = [1, 1, 1, 6, 2, 1, 8, 2, 2, 2, 2, 3]
 # c = list(range(0, len(b)))
 # a = getSigmaArr(b)
+
+def isContainsSpaces(key):
+    arr = key.split(' ')
+    arr = list(map(int, arr))
+    return chr(arr[0]) == ' ' or chr(arr[1]) == ' '

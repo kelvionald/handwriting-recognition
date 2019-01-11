@@ -54,6 +54,9 @@ for user in dirs:
     i = 10
     for el in model:
         key = el['key']
+        if (isContainsSpaces(key)):
+            print('continue ', key)
+            continue
         # if '66 32' != key: continue # testing
         i -= 1
         if i == 0: break # testing
