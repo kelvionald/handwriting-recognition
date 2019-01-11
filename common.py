@@ -110,7 +110,10 @@ class GraphData:
                 movingMiddleDots = middleDots[-StdPeriod:]
                 for m in movingMiddleDots:
                     s += (m - movingAverage) ** 2
-                s /= len(movingMiddleDots)
+                if len(movingMiddleDots) - 1 == 0:
+                    s = movingMiddleDots[0]
+                else:
+                    s /= (len(movingMiddleDots) - 1)
                 sigma = math.sqrt(s)
                 curSigma = movingAverage + sigma * StdMultiplier
                 sigmaArr.append(curSigma)
@@ -137,7 +140,10 @@ def getSigmaArr(source):
             window = source[i-2:i+1]
         middle = middleCalc(window)
         summa = sum(map(lambda x: (x - middle) ** 2, window))
-        middleSqr = summa / len(window)
+        if len(window) - 1 == 0:
+            middleSqr = summa
+        else:
+            middleSqr = summa / (len(window) - 1)
         sigma = math.sqrt(middleSqr)
         sigmaArr.append(sigma)
         # print(window, middle, sigma)
