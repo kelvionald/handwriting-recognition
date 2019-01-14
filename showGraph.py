@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import os
 import math
+import json
 
 from common import *
 
@@ -36,10 +37,16 @@ def sortModel(lens):
                 lens[i], lens[j] = lens[j], lens[i]
     return lens
 
+def saveAdditionalData(path, data):
+    f = open(path, 'w')
+    f.write(json.dumps(data, indent=2, sort_keys=True))
+    f.close()
+
 # Пакетная обработка с предобработкой
 preparedPath = 'prepared/'
 graphsPath = 'graphs/'
 dirs = os.listdir(preparedPath)
+commonStat = {}
 for user in dirs:
     # if user != '5643': continue # testing
     xpath = preparedPath + user + '/'
@@ -52,6 +59,7 @@ for user in dirs:
     graphNum = 1
     model = sortModel(lensArr[0])
     i = 10
+    addData = {}
     for el in model:
         key = el['key']
         if (isContainsSpaces(key)):
@@ -82,3 +90,24 @@ for user in dirs:
 
         showGraph2(user, key, graphNum, dots, lines, dir)
         graphNum += 1
+        addData[key] = {}
+        addData[key]['dots'] = list(map(lambda x: str(x), dots))
+        stat = {}
+        for dd in dots:
+            key22 = dd[1]
+            if not key22 in stat:
+                stat[key22] = 0
+            stat[key22] += 1
+        stat2 = []
+        for kk, vv in stat.items():
+            stat2.append([kk, vv])
+        stat2.sort(key=lambda x: int(x[1]), reverse=True)
+        # print(stat2)
+        addData[key]['stat'] = list(map(lambda x: str(x), stat2))
+        if not user in commonStat:
+            commonStat[user] = {}
+        commonStat[user][key] = addData[key]['stat'][0:15]
+        # break
+    saveAdditionalData(graphsPath + user + '/dots.txt', addData)
+    # break
+saveAdditionalData(graphsPath + 'commonStat.txt', commonStat)
