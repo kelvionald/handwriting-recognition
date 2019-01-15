@@ -67,7 +67,7 @@ for user in dirs:
             continue
         # if '66 32' != key: continue # testing
         i -= 1
-        if i == 0: break # testing
+        # if i == 0: break # testing
 
         lines = []
         dots = []
@@ -88,7 +88,7 @@ for user in dirs:
             commonMiddle = GraphData.getCommonMiddleLine(middleDots)
             lines.append([[1, len(middleDots)], [commonMiddle, commonMiddle], 'o', '#fefe22'])
 
-        showGraph2(user, key, graphNum, dots, lines, dir)
+        # showGraph2(user, key, graphNum, dots, lines, dir)
         graphNum += 1
         addData[key] = {}
         addData[key]['dots'] = list(map(lambda x: str(x), dots))
@@ -103,10 +103,10 @@ for user in dirs:
             stat2.append([kk, vv])
         stat2.sort(key=lambda x: int(x[1]), reverse=True)
         # print(stat2)
-        addData[key]['stat'] = list(map(lambda x: str(x), stat2))
+        addData[key]['stat'] = stat2#list(map(lambda x: str(x), stat2))
         if not user in commonStat:
             commonStat[user] = {}
-        commonStat[user][key] = addData[key]['stat'][0:15]
+        commonStat[user][key] = addData[key]['stat'][0][0]
         # break
     saveAdditionalData(graphsPath + user + '/dots.txt', addData)
     # break

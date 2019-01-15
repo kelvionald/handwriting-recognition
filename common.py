@@ -149,6 +149,8 @@ def getSigmaArr(source):
 # a = getSigmaArr(b)
 
 def isContainsSpaces(key):
+    # return False
     arr = key.split(' ')
     arr = list(map(int, arr))
-    return chr(arr[0]) == ' ' or chr(arr[1]) == ' '
+    # return chr(arr[0]) == ' ' or chr(arr[1]) == ' '
+    return arr[0] == 32 or arr[1] == 32
