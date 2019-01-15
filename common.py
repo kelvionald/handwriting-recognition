@@ -13,7 +13,7 @@ def getData(path):
         arr = line.split(',')
         dtime = arr[3].replace('\n', '')
         dtime = int(dtime)
-        if dtime > 1000:
+        if dtime > obrubka:
             continue
         key = arr[1] + ' ' + arr[2]
         if not key in data:

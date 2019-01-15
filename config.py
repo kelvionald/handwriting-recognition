@@ -12,3 +12,5 @@ StdPeriod = 5
 StdLimit = 0.93
 
 StdEnable = True
+
+obrubka = 500

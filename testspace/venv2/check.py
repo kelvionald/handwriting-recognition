@@ -23,7 +23,7 @@ def getData(path):
         arr = line.split(',')
         dtime = arr[3].replace('\n', '')
         dtime = int(dtime)
-        if dtime > 1000:
+        if dtime > obrubka:
             continue
         key = arr[1] + ' ' + arr[2]
         if not key in data:
@@ -32,16 +32,6 @@ def getData(path):
     f.close()
     return data
 
-def getLens(data):
-    '''Возвращает сортированное количесво переходов'''
-    lens = []
-    for key in data.keys():
-        lens.append({
-            'key': key,
-            'length': len(data[key])
-        })
-    return lens
-
 def prepareData(files):
     lensArr = []
     dataArr = {}
@@ -49,8 +39,6 @@ def prepareData(files):
     for file in files:
         data = getData(file)
         dataArr[file] = data
-        # lens = getLens(data)
-        # lensArr.append(lens)
     return lensArr, dataArr
 
 import math
@@ -77,8 +65,10 @@ def prepareAttempt(attempt, commonModel):
     for m in commonModel:
         # print(m)
         arr[m] = attempt[m]
+        # attempt[m] = list(filter(lambda x: x < 501, attempt[m]))
+        # print(attempt[m])
         mid = sum(attempt[m])/len(attempt[m])
-        arr[m] = mid / 1000
+        arr[m] = mid / obrubka
     return [list(arr.values())]
 
 def checkAttempt(nn, attempt):
@@ -142,7 +132,6 @@ for da in dirs:
                 result = checkAttempt(nn, attempt)
                 results.append(list(map(list, result)))
                 ln = round(result[0][0], 3)
-                access = 0.85
                 if assocModels[dd] == nameUserAttempt and ln < access:
                     print('error == ', assocModels[dd], nameUserAttempt, ln)
                     errors += 1
@@ -162,3 +151,8 @@ for da in dirs:
     # break
 print('total', 'errors', errors, 'counts', counts)
 print('success percent', (counts - errors) / counts)
+
+print({
+    'obrubka': obrubka,
+    'access':access
+})

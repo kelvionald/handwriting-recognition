@@ -52,7 +52,7 @@ for uid in jd:
 
 def normalize2(userInputs):
     for k, v in userInputs.items():
-        userInputs[k] = v/1000
+        userInputs[k] = v/obrubka
     return userInputs
 
 def prepareForInputs(data):
@@ -75,7 +75,7 @@ def trainNN(inputs, outputs, uid):
                 optimizer='adam',
                 metrics=['binary_accuracy'])
     t = current_milli_time()
-    model.fit(training_data, target_data, nb_epoch=10000, verbose=2)
+    model.fit(training_data, target_data, nb_epoch=3000, verbose=2)
     print('dt=', (current_milli_time() - t) / 1000)
     result = model.predict(training_data)
     printResult(result)
