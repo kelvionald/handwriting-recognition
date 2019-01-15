@@ -4,6 +4,10 @@ from keras.layers.core import Dense
 import time
 import json
 import os
+from common import *
+
+if not os.path.exists('models'):
+    os.makedirs('models')
 
 current_milli_time = lambda: int(round(time.time() * 1000))
 
@@ -31,7 +35,13 @@ for k in dictionary:
     if dictionary[k] == 8: 
         arr.append(k)
 
-arr = arr[0:5]
+# save model
+f = open('models/common.json', 'w')
+f.write(json.dumps(arr, indent=2, sort_keys=True))
+f.close()
+
+# exit()
+# arr = arr[0:5]
 
 userInputs = {}
 for uid in jd:
@@ -52,38 +62,50 @@ def prepareForInputs(data):
         arrInputs.append(values)
     return arrInputs
 
-def prepareAndTrain(inputs, outputs, uid):
+def trainNN(inputs, outputs, uid):
     print(inputs, outputs)
     countKeys = len(inputs[0])
     training_data = np.array(inputs, "float32")
     target_data = np.array(outputs, "float32")
     model = Sequential()
-    model.add(Dense(20, input_dim=countKeys, activation='relu'))
-    model.add(Dense(20, activation='relu'))
+    model.add(Dense(40, input_dim=countKeys, activation='relu'))
+    model.add(Dense(40, activation='relu'))
     model.add(Dense(1, activation='sigmoid'))
     model.compile(loss='mean_squared_error',
                 optimizer='adam',
                 metrics=['binary_accuracy'])
     t = current_milli_time()
-    model.fit(training_data, target_data, nb_epoch=1000, verbose=2)
+    model.fit(training_data, target_data, nb_epoch=10000, verbose=2)
     print('dt=', (current_milli_time() - t) / 1000)
     result = model.predict(training_data)
-    getPercent = lambda x: round(x[0], 4)
-    result = [getPercent(x) for x in result]
-    print(result)
+    printResult(result)
     return model
 
+f = open('log-training.txt', 'w')
+f.write('')
+f.close()
+
+def log(a):
+    f = open('log-training.txt', 'a')
+    f.write(a + "\n")
+    f.close()
+
+t_common = current_milli_time()
 for uid in userInputs:
     userInputs[uid] = normalize2(userInputs[uid])
 userInputsT = userInputs
 tmpKeys = userInputs.keys() 
 userInputs = prepareForInputs(userInputs)
+print(userInputs)
 for uid in userInputsT:
     print('training user ', uid)
     outputs = [0 for x in range(0, len(userInputs))]
     index = list(tmpKeys).index(uid)
     outputs[index] = 1
     outputs = [[x] for x in outputs]
-    nn = prepareAndTrain(userInputs, outputs, uid)
-    print(nn)
-    break
+    t = current_milli_time()
+    nn = trainNN(userInputs, outputs, uid)
+    log('dt=' + str((current_milli_time() - t) / 1000))
+    nn.save('models/' + uid + '.h5')
+    # break
+log('dt_common=' + str((current_milli_time() - t_common) / 1000))

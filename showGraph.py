@@ -42,6 +42,8 @@ def saveAdditionalData(path, data):
     f.write(json.dumps(data, indent=2, sort_keys=True))
     f.close()
 
+colorBadDot = 'red'
+
 # Пакетная обработка с предобработкой
 preparedPath = 'prepared/'
 graphsPath = 'graphs/'
@@ -82,7 +84,7 @@ for user in dirs:
             attemptNum = dots[j][0]
             value = dots[j][1]
             if value > sigmaArr[attemptNum - 1]:
-                dots[j][2] = 'red'
+                dots[j][2] = colorBadDot
         # Общая средняя линия
         if len(middleDots) != 0:
             commonMiddle = GraphData.getCommonMiddleLine(middleDots)
@@ -94,6 +96,8 @@ for user in dirs:
         addData[key]['dots'] = list(map(lambda x: str(x), dots))
         stat = {}
         for dd in dots:
+            if dd[2] == colorBadDot:
+                continue
             key22 = dd[1]
             if not key22 in stat:
                 stat[key22] = 0

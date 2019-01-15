@@ -1,0 +1,1 @@
+python.exe .\testspace\venv2\check.py > log-ru.txt
