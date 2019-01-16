@@ -50,7 +50,7 @@ graphsPath = 'graphs/'
 dirs = os.listdir(preparedPath)
 commonStat = {}
 for user in dirs:
-    if user != '5643': continue # testing
+    # if user != '5643': continue # testing
     xpath = preparedPath + user + '/'
     files = os.listdir(xpath)
     dir = graphsPath + user + '/'
@@ -58,6 +58,9 @@ for user in dirs:
         os.makedirs(dir)
     files = list(map(lambda x: xpath + x, files))
     lensArr, dataArr, commonModel = prepareData(files)
+    # print(len(dataArr))
+    # print(dataArr)
+    # if
     graphNum = 1
     model = sortModel(lensArr[0])
     i = 10
@@ -95,7 +98,6 @@ for user in dirs:
         addData[key] = {}
         addData[key]['dots'] = list(map(lambda x: str(x), dots))
         stat = {}
-        print(len(dots))
         for dd in dots:
             if dd[2] == colorBadDot:
                 continue

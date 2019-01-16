@@ -58,6 +58,11 @@ def prepareData(files):
     dataArr = []
     commonModel = []
 
+    # print(len(files))
+
+    if exclude != 0:
+        files = files[int(exclude * len(files)):]
+
     for file in files:
         data = getData(file)
         dataArr.append(data)

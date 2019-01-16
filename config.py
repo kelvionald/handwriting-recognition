@@ -14,3 +14,5 @@ StdLimit = 0.93
 StdEnable = True
 
 obrubka = 500
+
+exclude = 1/3
