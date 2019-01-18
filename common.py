@@ -1,6 +1,26 @@
 from config import *
 import math
 
+getPercent = lambda x: round(x[0], 3)
+
+def printResult(result):
+    result = [getPercent(x) for x in result]
+    print(result)
+
+def isContainsSpaces(key):
+    # return False
+    arr = key.split(' ')
+    arr = list(map(int, arr))
+    # return chr(arr[0]) == ' ' or chr(arr[1]) == ' '
+    return arr[0] == 32 or arr[1] == 32
+
+def getChar(code):
+    '''Код символа в символ'''
+    ch = chr(code)
+    if ch == ' ':
+        return 'Пробел'
+    return ch
+
 def middleCalc(arr):
     return sum(arr) / len(arr)
 
@@ -21,13 +41,6 @@ def getData(path):
         data[key].append(dtime)
     f.close()
     return data
-
-def getChar(code):
-    '''Код символа в символ'''
-    ch = chr(code)
-    if ch == ' ':
-        return 'Пробел'
-    return ch
 
 def getLens(data):
     '''Возвращает сортированное количесво переходов'''
@@ -147,15 +160,3 @@ def getSigmaArr(source):
         sigmaArr.append(sigma)
         # print(window, middle, sigma)
     return sigmaArr
-
-# import matplotlib.pyplot as plt
-# b = [1, 1, 1, 6, 2, 1, 8, 2, 2, 2, 2, 3]
-# c = list(range(0, len(b)))
-# a = getSigmaArr(b)
-
-def isContainsSpaces(key):
-    # return False
-    arr = key.split(' ')
-    arr = list(map(int, arr))
-    # return chr(arr[0]) == ' ' or chr(arr[1]) == ' '
-    return arr[0] == 32 or arr[1] == 32
