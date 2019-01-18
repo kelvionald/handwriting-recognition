@@ -1,2 +1,5 @@
 pip install PTable
 python -m pip install -U matplotlib
+pip install keras=2.2.4
+pip install tensorflow=1.12.0
+pip install virtualenv=16.2.0
