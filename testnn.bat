@@ -1,1 +1,1 @@
-python.exe .\testspace\venv2\check.py > log-ru.txt
+python.exe .\check.py > logs/log-run.txt

@@ -129,6 +129,7 @@ for da in dirs:
             results = []
             for dd in models:
                 nn = models[dd]
+                # attempt = attempt[0:]
                 result = checkAttempt(nn, attempt)
                 results.append(list(map(list, result)))
                 ln = round(result[0][0], 3)
@@ -154,5 +155,7 @@ print('success percent', (counts - errors) / counts)
 
 print({
     'obrubka': obrubka,
-    'access':access
+    'access':access,
+    'sliceKeys': sliceKeys,
+    'epochs': epochs
 })

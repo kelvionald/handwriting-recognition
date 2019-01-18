@@ -1,0 +1,1 @@
+python showGraph.py && python train.py && python check.py

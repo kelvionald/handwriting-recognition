@@ -83,11 +83,12 @@ for user in dirs:
         middleDots, movingAverages, sigmaArr, tmp = GraphData.getMiddleLines(dataArr, key)
         [lines.append(x) for x in tmp]
         # Перекраска точек выше стандартного отклонения
-        for j in range(0, len(dots)):
-            attemptNum = dots[j][0]
-            value = dots[j][1]
-            if value > sigmaArr[attemptNum - 1]:
-                dots[j][2] = colorBadDot
+        if stdEnable:
+            for j in range(0, len(dots)):
+                attemptNum = dots[j][0]
+                value = dots[j][1]
+                if value > sigmaArr[attemptNum - 1]:
+                    dots[j][2] = colorBadDot
         # Общая средняя линия
         if len(middleDots) != 0:
             commonMiddle = GraphData.getCommonMiddleLine(middleDots)
@@ -113,7 +114,8 @@ for user in dirs:
         addData[key]['stat'] = stat2#list(map(lambda x: str(x), stat2))
         if not user in commonStat:
             commonStat[user] = {}
-        commonStat[user][key] = addData[key]['stat'][0][0]
+        if len(addData[key]['stat']) >= 2:
+            commonStat[user][key] = [addData[key]['stat'][0][0], addData[key]['stat'][1][0]]
         # break
     saveAdditionalData(graphsPath + user + '/dots.txt', addData)
     # break

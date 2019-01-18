@@ -16,3 +16,9 @@ exclude = 1/3
 obrubka = 500
 # Допуск 
 access = 0.85
+# Отсеивать времена выше стандартного отклонения
+stdEnable = True
+
+sliceKeys = 10
+
+epochs = 400
